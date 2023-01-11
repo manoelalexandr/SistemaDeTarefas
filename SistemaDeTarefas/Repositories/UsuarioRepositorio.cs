@@ -24,8 +24,9 @@ namespace SistemaDeTarefas.Repositories
 
         public async Task<UsuarioModel> Adicionar(UsuarioModel usuario)
         {
-            _dbContext.Usuarios.Add(usuario);
-            _dbContext.SaveChanges();
+            await _dbContext.Usuarios.AddAsync(usuario);
+            await _dbContext.SaveChangesAsync();
+
             return usuario;
         }
 
@@ -42,7 +43,7 @@ namespace SistemaDeTarefas.Repositories
             usuarioModel.Email = usuario.Email;
 
             _dbContext.Usuarios.Update(usuarioModel);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
 
             return usuarioModel;
         }
@@ -55,6 +56,10 @@ namespace SistemaDeTarefas.Repositories
             {
                 throw new Exception($"Usuário para o ID: {id} não foi encontrado no banco de dados");
             }
+
+            _dbContext.Usuarios.Remove(usuarioModel);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
     }
